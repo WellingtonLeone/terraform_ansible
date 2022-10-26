@@ -1,0 +1,22 @@
+---
+# tasks file for wordpress
+- name: Download WordPress
+  get_url:
+      url=https://wordpress.org/latest.tar.gz
+      dest=/tmp/wordprss.tar.gz
+      validate_certs=no
+
+- name: Extraindo WordPress
+  unarchive: src=/tmp/wordpress.tar.gz dest=/var/www/ copy=no
+  become: yes
+
+- name: Atualizando site do Apache Default
+  become: yes
+  lineinfile:
+        dest=/etc/apache2/sites-enabled/000-default.conf
+        regexp="(.)+DocumentRoot /var/www/html"
+        line="DocumentRoot /var/www/wordpress"
+        notify:
+          - restart apache
+- name: Copiar o Sample Config File
+  command: mv /var/www/wordprss/wp-config-sample.php /var/www/wordpress/wp-config.php creats=/var/www/
