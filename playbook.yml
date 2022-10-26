@@ -1,24 +1,12 @@
 - hosts: terraform-ansible
+  gather_facts: False
+  become: yes
   tasks:
-  - name: Instalando o Python3, virtualenv
-    apt:
-      pkg:
-      - python3
-      - virtualenv
-      update_cache: yes
-    become: yes
-  - name: Instalando dependencias com pip (Django e Django Rest)
-    pip:
-      virtualenv: /home/ubuntu/tcc/venv
-      name:
-        - django
-        - djangorestframework
-  - name: Iniciando o projeto
-    shell: '. /home/ubuntu/tcc/venv/bin/activate; django-admin startproject setup /home/ubuntu/tcc/'
-    ignore_errors: yes
-  - name: Alterando Hosts do settings
-    lineinfile:
-      path: /home/ubuntu/tcc/setup/settings.py
-      regexp: 'ALLOWED_HOSTS'
-      line: 'ALLOWED_HOSTS = ["*"] '
-      backrefs: yes
+  - name: Instalando o Python3
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+  - hosts: wordpress
+    roles:
+      - server
+      - php
+      - mysql
+      - wordpress
