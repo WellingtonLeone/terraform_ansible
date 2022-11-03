@@ -1,10 +1,13 @@
-- hosts: terraform-ansible
+- hosts: all
   gather_facts: False
   become: yes
+
   tasks:
   - name: Instalando o Python3
     raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+
   - hosts: wordpress
+  
     roles:
       - server
       - php
