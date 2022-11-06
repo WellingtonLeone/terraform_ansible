@@ -1,15 +1,13 @@
-- hosts: all
+- hosts: wordpress
   gather_facts: False
   become: yes
 
   tasks:
-  - name: Instalando o Python3
+  - name: 'Instalando o Python3'
     raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
-
-  - hosts: wordpress
   
-    roles:
-      - server
-      - php
-      - mysql
-      - wordpress
+  roles:
+    - server
+    - php
+    - mysql
+    - wordpress
